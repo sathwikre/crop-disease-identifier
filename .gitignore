@@ -1,0 +1,13 @@
+# Ignore the trained model file (kept out of VCS due to size/privacy)
+Team3model.h5
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+
+# Flask uploads
+static/uploads/
