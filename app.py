@@ -112,13 +112,11 @@ def model_prediction(test_image_path):
 @app.route('/')
 def index():
     # Serve the home page as the default root (login disabled)
-    return render_template('home.html')
+    return render_template('disease-recognition.html')
 
 # Login disabled: login route removed
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
+# Removed separate /home route — root now serves the disease recognition page.
 
 @app.route('/disease-recognition', methods=['GET', 'POST'])
 def disease_recognition():
