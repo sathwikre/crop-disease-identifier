@@ -4,76 +4,400 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Prediction Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=600') no-repeat center center fixed;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1920') no-repeat center center fixed;
             background-size: cover;
-            font-family: Arial, sans-serif;
+            opacity: 0.1;
+            z-index: 0;
         }
+
         .navbar {
-            overflow: hidden;
-            background-color: #333;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
         }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
         .navbar a {
             float: left;
             display: block;
-            color: white;
+            color: #2d3748;
             text-align: center;
-            padding: 14px 20px;
+            padding: 20px 28px;
             text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
         }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
         .navbar a:hover {
-            background-color: #ddd;
-            color: black;
+            color: #667eea;
         }
-        .navbar .right {
+
+        .navbar a:hover::after {
+            width: 60%;
+        }
+
+        .language-selector {
             float: right;
-        }
-        .content {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            margin: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .prediction-result {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            margin-top: 20px;
-            box-sizing: border-box;
+            padding: 15px 28px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
         }
-        .prediction-result h2 {
+
+        .language-selector label {
+            color: #4a5568;
+            font-size: 18px;
+        }
+
+        .language-selector select {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            color: #2d3748;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .language-selector select:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 950px;
+            margin: 50px auto;
+            padding: 0 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content h1 {
             text-align: center;
-            margin-bottom: 20px;
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: -1px;
         }
+
+        .content h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: white;
+            margin: 15px auto 40px;
+            border-radius: 2px;
+            animation: expandWidth 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 80px;
+            }
+        }
+
+        .prediction-result {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: 50px 45px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            text-align: center;
+            animation: scaleIn 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .prediction-result h2 {
+            color: #1a202c;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            text-shadow: none;
+        }
+
+        #predictedDisease {
+            color: #667eea;
+            font-weight: 700;
+            display: block;
+            margin-top: 12px;
+            font-size: 2rem;
+            animation: fadeIn 0.8s ease 0.5s both;
+            text-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .prediction-result p {
+            color: #2d3748;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin: 35px 0;
+            text-align: left;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease 0.7s both;
+        }
+
+        .prediction-result p strong {
+            color: #1a202c;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
         .prediction-result img {
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: block;
+            border-radius: 16px;
+            margin-top: 35px;
+            border: 3px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.8s ease 0.9s both;
+        }
+
+        .prediction-result img:hover {
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .content h1 {
+                font-size: 2.2rem;
+            }
+
+            .prediction-result {
+                padding: 35px 25px;
+            }
+
+            .prediction-result h2 {
+                font-size: 1.5rem;
+            }
+
+            #predictedDisease {
+                font-size: 1.6rem;
+            }
+
+            .prediction-result p {
+                font-size: 1rem;
+                padding: 25px;
+            }
+
+            .navbar a {
+                padding: 16px 20px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('disease_recognition') }}">Disease Recognition</a>
-    </div>
-    <div class="content">
-        <h1>Plant Disease Prediction Result</h1>
-        <div class="prediction-result">
-            <h2>Predicted Disease: {{ predicted_disease }}</h2>
-            <p><strong>Recommended Action:</strong> {{ precaution }}</p>
-            <img src="{{ image_url }}" alt="Uploaded Image">
+        <a href="http://localhost/sathwik/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home">Home</a>
+        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition">Disease Recognition</a>
+        <div class="language-selector">
+            <label for="langSelect">🌐</label>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="te">తెలుగు</option>
+            </select>
         </div>
     </div>
+    <div class="content">
+        <h1 data-i18n="result.title">Plant Disease Prediction Result</h1>
+        <div class="prediction-result">
+            {% if predicted_disease %}
+            <h2>
+                <span id="predictedLabel" data-i18n="result.predicted_disease">Predicted Disease:</span> 
+                <span id="predictedDisease">{{ predicted_disease }}</span>
+            </h2>
+            {% else %}
+            <h2 style="color: #e53e3e;">
+                <span>Error: No prediction available</span>
+            </h2>
+            {% endif %}
+            
+            {% if precaution %}
+            <p>
+                <strong id="recommendedLabel" data-i18n="result.recommended_action">Recommended Action:</strong> 
+                <span id="precaution">{{ precaution|safe }}</span>
+            </p>
+            {% else %}
+            <p style="color: #e53e3e;">
+                <strong>Error: No recommendations available</strong>
+            </p>
+            {% endif %}
+            
+            {% if image_url %}
+            <img src="{{ image_url }}" alt="Uploaded Image">
+            {% else %}
+            <p style="color: #e53e3e;">Error: Image not found</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        const translations = {
+            en: {
+                nav: {
+                    home: 'Home',
+                    disease_recognition: 'Disease Recognition'
+                },
+                result: {
+                    title: 'Plant Disease Prediction Result',
+                    predicted_disease: 'Predicted Disease:',
+                    recommended_action: 'Recommended Action:'
+                }
+            },
+            te: {
+                nav: {
+                    home: 'హోమ్',
+                    disease_recognition: 'వ్యాధి గుర్తింపు'
+                },
+                result: {
+                    title: 'మొక్కల వ్యాధి అంచనా ఫలితం',
+                    predicted_disease: 'అంచనా వేసిన వ్యాధి:',
+                    recommended_action: 'సిఫార్సు చేసిన చర్య:'
+                }
+            }
+        };
+
+        function translate(key) {
+            const keys = key.split('.');
+            let value = translations[currentLanguage];
+            for (const k of keys) {
+                value = value?.[k];
+            }
+            return value || key;
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.cookie = 'language=' + lang + '; path=/; max-age=31536000';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const text = translate(key);
+                if (text) {
+                    if (element.id === 'predictedLabel' || element.id === 'recommendedLabel') {
+                        element.textContent = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+            document.getElementById('langSelect').value = currentLanguage;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!document.cookie.includes('language=')) {
+                document.cookie = 'language=' + currentLanguage + '; path=/; max-age=31536000';
+            }
+            updateLanguage();
+        });
+    </script>
 </body>
 </html>

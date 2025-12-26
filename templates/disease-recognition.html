@@ -4,83 +4,1041 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Recognition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=600') no-repeat center center fixed;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1920') no-repeat center center fixed;
             background-size: cover;
-            font-family: Arial, sans-serif;
+            opacity: 0.1;
+            z-index: 0;
         }
+
         .navbar {
-            overflow: hidden;
-            background-color: #333;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
         }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
         .navbar a {
             float: left;
             display: block;
-            color: white;
+            color: #2d3748;
             text-align: center;
-            padding: 14px 20px;
+            padding: 20px 28px;
             text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
         }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
         .navbar a:hover {
-            background-color: #ddd;
-            color: black;
+            color: #667eea;
         }
-        .navbar .right {
+
+        .navbar a:hover::after {
+            width: 60%;
+        }
+
+        .language-selector {
             float: right;
+            padding: 15px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+        .language-selector label {
+            color: #4a5568;
+            font-size: 18px;
+        }
+
+        .language-selector select {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            color: #2d3748;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .language-selector select:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
         .content {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            margin: 20px;
-            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 0 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content h1 {
             text-align: center;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: -1px;
         }
-        .upload-container {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: left;
-            box-sizing: border-box;
-        }
-        .upload-container input[type="file"] {
+
+        .content h1::after {
+            content: '';
             display: block;
-            margin: 10px 0;
-            width: 100%;
+            width: 80px;
+            height: 4px;
+            background: white;
+            margin: 15px auto 40px;
+            border-radius: 2px;
+            animation: expandWidth 0.8s ease-out 0.5s both;
         }
-        .upload-container button {
-            padding: 10px 20px;
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 80px;
+            }
+        }
+
+        .upload-container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: 45px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: scaleIn 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 30px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 35px;
+            justify-content: center;
+            background: #f0f4f8;
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mode-toggle button {
+            flex: 1;
+            padding: 16px 28px;
+            border: 2px solid #cbd5e0;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 170px;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .mode-toggle button:nth-child(2) {
+            animation: slideInRight 0.5s ease-out 0.1s both;
+        }
+
+        .mode-toggle button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mode-toggle button span {
+            position: relative;
+            z-index: 1;
+            color: #000000;
+        }
+
+        .mode-toggle button:hover {
+            color: #000000;
+            background: #f7fafc;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px) scale(1.02);
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .mode-toggle button:hover span {
+            color: #000000;
+        }
+
+        .mode-toggle button.active {
+            color: #000000;
+            border-color: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            font-weight: 700;
+            background: #e6f0ff;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .mode-toggle button.active span {
+            color: #000000;
+        }
+
+        .mode-toggle button.active::before {
+            opacity: 0;
+        }
+
+        .mode-toggle button.active::before {
+            opacity: 1;
+        }
+
+        .file-upload-container, .camera-container {
+            text-align: center;
+        }
+
+        .file-upload-container h2, .camera-container h2 {
+            margin-bottom: 30px;
+            color: #1a202c;
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-shadow: none;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .file-upload-container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .file-input-wrapper {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .upload-container input[type="file"] {
+            width: 100%;
+            padding: 20px;
+            border: 3px dashed #a0aec0;
+            border-radius: 16px;
+            background: #ffffff;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            color: #2d3748;
+            font-weight: 500;
+            animation: fadeIn 0.6s ease 0.4s both;
+        }
+
+        .upload-container input[type="file"]:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            animation: bounce 0.6s ease;
+        }
+
+        .upload-container input[type="file"]:focus {
+            animation: glow 1.5s ease-in-out infinite;
+        }
+
+        .upload-container input[type="file"]::file-selector-button {
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             cursor: pointer;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: all 0.3s ease;
         }
-        .upload-container button:hover {
-            background-color: #45a049;
+
+        .upload-container input[type="file"]::file-selector-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #filePreview {
+            width: 100%;
+            max-width: 550px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #filePreview img {
+            width: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            border: 3px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #filePreview img:hover {
+            transform: scale(1.02);
+        }
+
+        #fileName {
+            margin-top: 15px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .upload-container button, .camera-controls button {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease 0.6s both;
+        }
+
+        .upload-container button::before, .camera-controls button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .upload-container button:hover::before, .camera-controls button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .upload-container button span, .camera-controls button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .upload-container button:hover, .camera-controls button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .upload-container button:active, .camera-controls button:active {
+            transform: translateY(-1px) scale(0.98);
+            animation: bounce 0.3s ease;
+        }
+
+        .upload-container button:disabled {
+            background: #cbd5e0 !important;
+            cursor: not-allowed;
+            transform: none !important;
+            opacity: 0.7;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        #predictBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #predictBtn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .camera-container {
+            display: none;
+        }
+
+        .camera-container.active {
+            display: block;
+            animation: slideInRight 0.5s ease;
+        }
+
+        .file-upload-container {
+            animation: slideInLeft 0.5s ease;
+        }
+
+        .file-upload-container.hidden {
+            display: none;
+            animation: slideInLeft 0.3s ease reverse;
+        }
+
+
+        #videoElement {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            margin: 20px auto 15px auto;
+            display: block;
+            border: 3px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.6s ease 0.3s both;
+        }
+
+        #videoElement:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        #previewImage {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            max-height: 400px;
+            border-radius: 16px;
+            margin: 20px auto 15px auto;
+            border: 3px solid #e2e8f0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            object-fit: contain;
+        }
+
+        #previewImage:hover {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        #previewImage.show {
+            display: block;
+            animation: scaleIn 0.5s ease, bounce 0.6s ease 0.3s;
+        }
+
+        .camera-controls {
+            margin: 15px 0 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        #startCameraBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #captureBtn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        #captureBtn:disabled {
+            background: #cbd5e0 !important;
+        }
+
+        #retakeBtn {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        #uploadPhotoBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #stopCameraBtn {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        /* Loading spinner animation */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .content h1 {
+                font-size: 2.2rem;
+            }
+
+            .upload-container {
+                padding: 30px 20px;
+            }
+
+            .mode-toggle {
+                flex-direction: column;
+            }
+
+            .mode-toggle button {
+                min-width: auto;
+            }
+
+            .navbar a {
+                padding: 16px 20px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('disease_recognition') }}">Disease Recognition</a>
-    </div>
-    <div class="content">
-        <h1>Plant Disease Recognition</h1>
-        <div class="upload-container">
-            <h2>Upload an Image</h2>
-            <form action="{{ url_for('disease_recognition') }}" method="post" enctype="multipart/form-data">
-                <input type="file" name="file" accept="image/*" required>
-                <button type="submit">Predict</button>
-            </form>
+        <a href="http://localhost/sathwik/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home"><span>Home</span></a>
+        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition"><span>Disease Recognition</span></a>
+        <div class="language-selector">
+            <label for="langSelect">🌐</label>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="te">తెలుగు</option>
+            </select>
         </div>
     </div>
+    <div class="content">
+        <h1 data-i18n="title">Plant Disease Recognition</h1>
+        <div class="upload-container">
+            <div class="mode-toggle">
+                <button id="uploadModeBtn" class="active" onclick="switchMode('upload')" data-i18n="btn.upload_image"><span>Upload Image</span></button>
+                <button id="cameraModeBtn" onclick="switchMode('camera')" data-i18n="btn.take_photo"><span>Take Photo</span></button>
+            </div>
+
+            <!-- File Upload Mode -->
+            <div id="fileUploadContainer" class="file-upload-container">
+                <h2 data-i18n="upload.title">Upload an Image</h2>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div style="background: #fee; border: 2px solid #fcc; color: #c33; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: 600;">
+                            {% for message in messages %}
+                                <div>{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <form id="uploadForm" action="{{ url_for('disease_recognition') }}" method="post" enctype="multipart/form-data">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" id="fileInput" accept="image/*" required onchange="previewFile()">
+                    </div>
+                    <div id="filePreview" style="display: none; margin: 15px 0;">
+                        <img id="previewImg" src="" alt="Preview">
+                        <p id="fileName"></p>
+                    </div>
+                    <button type="submit" id="predictBtn" data-i18n="btn.predict_disease"><span>Predict Disease</span></button>
+                </form>
+            </div>
+
+            <!-- Camera Mode -->
+            <div id="cameraContainer" class="camera-container">
+                <h2 data-i18n="camera.title">Take a Photo</h2>
+                <video id="videoElement" autoplay playsinline></video>
+                <canvas id="canvasElement"></canvas>
+                <img id="previewImage" class="preview-image" alt="Captured image">
+                <div class="camera-controls">
+                    <button id="startCameraBtn" onclick="startCamera()" data-i18n="btn.start_camera"><span>Start Camera</span></button>
+                    <button id="captureBtn" onclick="capturePhoto()" disabled data-i18n="btn.capture_photo"><span>Capture Photo</span></button>
+                    <button id="retakeBtn" onclick="retakePhoto()" style="display: none;" data-i18n="btn.retake"><span>Retake</span></button>
+                    <button id="uploadPhotoBtn" onclick="uploadPhoto()" style="display: none;" data-i18n="btn.upload_predict"><span>Upload & Predict</span></button>
+                    <button id="stopCameraBtn" onclick="stopCamera()" style="display: none;" data-i18n="btn.stop_camera"><span>Stop Camera</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stream = null;
+        let capturedBlob = null;
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        const translations = {
+            en: {
+                nav: {
+                    home: 'Home',
+                    disease_recognition: 'Disease Recognition'
+                },
+                title: 'Plant Disease Recognition',
+                btn: {
+                    upload_image: 'Upload Image',
+                    take_photo: 'Take Photo',
+                    predict_disease: 'Predict Disease',
+                    start_camera: 'Start Camera',
+                    capture_photo: 'Capture Photo',
+                    retake: 'Retake',
+                    upload_predict: 'Upload & Predict',
+                    stop_camera: 'Stop Camera',
+                    processing: 'Processing...'
+                },
+                upload: {
+                    title: 'Upload an Image',
+                    selected: 'Selected:'
+                },
+                camera: {
+                    title: 'Take a Photo'
+                },
+                messages: {
+                    select_file: 'Please select an image file first',
+                    valid_file: 'Please select a valid image file (JPG, PNG, etc.)',
+                    capture_first: 'Please capture a photo first',
+                    camera_error: 'Error accessing camera:',
+                    upload_error: 'Error uploading photo:'
+                }
+            },
+            te: {
+                nav: {
+                    home: 'హోమ్',
+                    disease_recognition: 'వ్యాధి గుర్తింపు'
+                },
+                title: 'మొక్కల వ్యాధి గుర్తింపు',
+                btn: {
+                    upload_image: 'చిత్రం అప్‌లోడ్ చేయి',
+                    take_photo: 'ఫోటో తీయండి',
+                    predict_disease: 'వ్యాధిని అంచనా వేయండి',
+                    start_camera: 'కెమెరా ప్రారంభించండి',
+                    capture_photo: 'ఫోటో తీయండి',
+                    retake: 'మళ్లీ తీయండి',
+                    upload_predict: 'అప్‌లోడ్ & అంచనా',
+                    stop_camera: 'కెమెరా ఆపండి',
+                    processing: 'ప్రాసెస్ చేస్తోంది...'
+                },
+                upload: {
+                    title: 'చిత్రం అప్‌లోడ్ చేయండి',
+                    selected: 'ఎంచుకున్నది:'
+                },
+                camera: {
+                    title: 'ఫోటో తీయండి'
+                },
+                messages: {
+                    select_file: 'దయచేసి మొదట ఒక చిత్రం ఫైల్‌ను ఎంచుకోండి',
+                    valid_file: 'దయచేసి చెల్లుబాటు అయ్యే చిత్రం ఫైల్‌ను ఎంచుకోండి (JPG, PNG, మొదలైనవి)',
+                    capture_first: 'దయచేసి మొదట ఫోటో తీయండి',
+                    camera_error: 'కెమెరాను యాక్సెస్ చేయడంలో లోపం:',
+                    upload_error: 'ఫోటో అప్‌లోడ్ చేయడంలో లోపం:'
+                }
+            }
+        };
+
+        function translate(key) {
+            const keys = key.split('.');
+            let value = translations[currentLanguage];
+            for (const k of keys) {
+                value = value?.[k];
+            }
+            return value || key;
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.cookie = 'language=' + lang + '; path=/; max-age=31536000';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const text = translate(key);
+                if (text) {
+                    if (element.querySelector('span')) {
+                        element.querySelector('span').textContent = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+            document.getElementById('langSelect').value = currentLanguage;
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                previewFile();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!document.cookie.includes('language=')) {
+                document.cookie = 'language=' + currentLanguage + '; path=/; max-age=31536000';
+            }
+            updateLanguage();
+        });
+
+        function previewFile() {
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const previewImg = document.getElementById('previewImg');
+            const fileName = document.getElementById('fileName');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    fileName.textContent = translate('upload.selected') + ' ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+                    filePreview.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(file);
+            } else {
+                filePreview.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('uploadForm');
+            const fileInput = document.getElementById('fileInput');
+            const predictBtn = document.getElementById('predictBtn');
+            
+            if (form && predictBtn) {
+                form.addEventListener('submit', function(e) {
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        e.preventDefault();
+                        alert(translate('messages.select_file'));
+                        return false;
+                    }
+                    
+                    const file = fileInput.files[0];
+                    if (!file.type.startsWith('image/')) {
+                        e.preventDefault();
+                        alert(translate('messages.valid_file'));
+                        return false;
+                    }
+                    
+                    predictBtn.disabled = true;
+                    if (predictBtn.querySelector('span')) {
+                        predictBtn.querySelector('span').textContent = translate('btn.processing');
+                    } else {
+                        predictBtn.textContent = translate('btn.processing');
+                    }
+                    return true;
+                });
+            }
+        });
+
+        function switchMode(mode) {
+            const uploadBtn = document.getElementById('uploadModeBtn');
+            const cameraBtn = document.getElementById('cameraModeBtn');
+            const fileUploadContainer = document.getElementById('fileUploadContainer');
+            const cameraContainer = document.getElementById('cameraContainer');
+
+            if (mode === 'upload') {
+                uploadBtn.classList.add('active');
+                cameraBtn.classList.remove('active');
+                fileUploadContainer.classList.remove('hidden');
+                cameraContainer.classList.remove('active');
+                stopCamera();
+            } else {
+                uploadBtn.classList.remove('active');
+                cameraBtn.classList.add('active');
+                fileUploadContainer.classList.add('hidden');
+                cameraContainer.classList.add('active');
+            }
+        }
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                });
+                
+                const video = document.getElementById('videoElement');
+                video.srcObject = stream;
+                
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('captureBtn').disabled = false;
+                document.getElementById('stopCameraBtn').style.display = 'inline-block';
+                document.getElementById('previewImage').classList.remove('show');
+                document.getElementById('retakeBtn').style.display = 'none';
+                document.getElementById('uploadPhotoBtn').style.display = 'none';
+            } catch (err) {
+                alert(translate('messages.camera_error') + ' ' + err.message);
+                console.error('Error accessing camera:', err);
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('videoElement');
+            const canvas = document.getElementById('canvasElement');
+            const preview = document.getElementById('previewImage');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            canvas.toBlob(function(blob) {
+                capturedBlob = blob;
+                preview.src = canvas.toDataURL('image/jpeg');
+                preview.classList.add('show');
+                video.style.display = 'none';
+                document.getElementById('captureBtn').style.display = 'none';
+                document.getElementById('retakeBtn').style.display = 'inline-block';
+                document.getElementById('uploadPhotoBtn').style.display = 'inline-block';
+                document.getElementById('stopCameraBtn').style.display = 'none';
+            }, 'image/jpeg', 0.95);
+        }
+
+        function retakePhoto() {
+            const video = document.getElementById('videoElement');
+            const preview = document.getElementById('previewImage');
+            
+            preview.classList.remove('show');
+            video.style.display = 'block';
+            document.getElementById('captureBtn').style.display = 'inline-block';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('uploadPhotoBtn').style.display = 'none';
+            document.getElementById('stopCameraBtn').style.display = 'inline-block';
+            capturedBlob = null;
+        }
+
+        async function uploadPhoto() {
+            if (!capturedBlob) {
+                alert(translate('messages.capture_first'));
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadPhotoBtn');
+            const originalText = uploadBtn.querySelector('span') ? uploadBtn.querySelector('span').textContent : uploadBtn.textContent;
+            uploadBtn.disabled = true;
+            if (uploadBtn.querySelector('span')) {
+                uploadBtn.querySelector('span').textContent = translate('btn.processing');
+            } else {
+                uploadBtn.textContent = translate('btn.processing');
+            }
+
+            try {
+                const formData = new FormData();
+                const file = new File([capturedBlob], 'camera-capture.jpg', { type: 'image/jpeg' });
+                formData.append('file', file);
+
+                const response = await fetch("{{ url_for('disease_recognition') }}", {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    document.open();
+                    document.write(html);
+                    document.close();
+                } else {
+                    throw new Error('Upload failed');
+                }
+            } catch (error) {
+                alert(translate('messages.upload_error') + ' ' + error.message);
+                uploadBtn.disabled = false;
+                if (uploadBtn.querySelector('span')) {
+                    uploadBtn.querySelector('span').textContent = originalText;
+                } else {
+                    uploadBtn.textContent = originalText;
+                }
+                console.error('Upload error:', error);
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            const video = document.getElementById('videoElement');
+            video.srcObject = null;
+            
+            document.getElementById('startCameraBtn').style.display = 'inline-block';
+            document.getElementById('captureBtn').disabled = true;
+            document.getElementById('captureBtn').style.display = 'inline-block';
+            document.getElementById('stopCameraBtn').style.display = 'none';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('uploadPhotoBtn').style.display = 'none';
+            document.getElementById('previewImage').classList.remove('show');
+            video.style.display = 'block';
+            capturedBlob = null;
+        }
+
+        window.addEventListener('beforeunload', stopCamera);
+    </script>
 </body>
 </html>
