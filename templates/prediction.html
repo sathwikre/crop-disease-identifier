@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Prediction Result</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,31 +13,46 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-green: #2d8659;
+            --primary-green-dark: #1f5d3f;
+            --primary-green-light: #3da372;
+            --secondary-green: #4caf50;
+            --text-dark: #2c3e50;
+            --text-light: #5a6c7d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
         }
 
         body::before {
-            content: '';
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1920') no-repeat center center fixed;
-            background-size: cover;
-            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(45, 134, 89, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
             z-index: 0;
+            pointer-events: none;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: white;
+            box-shadow: var(--shadow-sm);
             padding: 0;
             position: sticky;
             top: 0;
@@ -64,13 +80,13 @@
         .navbar a {
             float: left;
             display: block;
-            color: #2d3748;
+            color: var(--text-dark);
             text-align: center;
             padding: 20px 28px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 15px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             position: relative;
         }
 
@@ -81,14 +97,15 @@
             left: 50%;
             width: 0;
             height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: all 0.3s ease;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transition: var(--transition);
             transform: translateX(-50%);
             border-radius: 2px;
         }
 
         .navbar a:hover {
-            color: #667eea;
+            color: var(--primary-green);
+            background: var(--bg-light);
         }
 
         .navbar a:hover::after {
@@ -122,8 +139,8 @@
         }
 
         .language-selector select:hover {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary-green);
+            box-shadow: 0 2px 8px rgba(45, 134, 89, 0.2);
             transform: translateY(-2px);
         }
 
@@ -149,12 +166,20 @@
 
         .content h1 {
             text-align: center;
-            color: white;
+            color: var(--primary-green-dark);
             font-size: 2.8rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 15px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
             letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .content h1 i {
+            color: var(--primary-green);
+            font-size: 48px;
         }
 
         .content h1::after {
@@ -162,40 +187,30 @@
             display: block;
             width: 80px;
             height: 4px;
-            background: white;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
             margin: 15px auto 40px;
             border-radius: 2px;
-            animation: expandWidth 0.8s ease-out 0.5s both;
-        }
-
-        @keyframes expandWidth {
-            from {
-                width: 0;
-            }
-            to {
-                width: 80px;
-            }
         }
 
         .prediction-result {
-            background: rgba(255, 255, 255, 0.98);
+            background: white;
             border-radius: 24px;
             padding: 50px 45px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
             text-align: center;
-            animation: scaleIn 0.6s ease-out 0.3s both;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .prediction-result::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
         }
 
         .prediction-result h2 {
@@ -208,32 +223,25 @@
         }
 
         #predictedDisease {
-            color: #667eea;
-            font-weight: 700;
+            color: var(--primary-green);
+            font-weight: 800;
             display: block;
             margin-top: 12px;
             font-size: 2rem;
-            animation: fadeIn 0.8s ease 0.5s both;
-            text-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            text-shadow: 0 2px 4px rgba(45, 134, 89, 0.2);
         }
 
         .prediction-result p {
-            color: #2d3748;
+            color: var(--text-dark);
             font-size: 1.05rem;
             line-height: 1.9;
             margin: 35px 0;
             text-align: left;
-            background: #ffffff;
+            background: var(--bg-light);
             padding: 30px;
             border-radius: 16px;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            animation: fadeIn 0.8s ease 0.7s both;
+            border-left: 5px solid var(--primary-green);
+            box-shadow: var(--shadow-sm);
         }
 
         .prediction-result p strong {
@@ -252,7 +260,6 @@
             border: 3px solid #e2e8f0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
-            animation: fadeIn 0.8s ease 0.9s both;
         }
 
         .prediction-result img:hover {
@@ -290,8 +297,12 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="http://localhost/sathwik/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home">Home</a>
-        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition">Disease Recognition</a>
+        <a href="http://localhost/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition">
+            <i class="fas fa-search"></i> Disease Recognition
+        </a>
         <div class="language-selector">
             <label for="langSelect">🌐</label>
             <select id="langSelect" onchange="changeLanguage(this.value)">
@@ -301,7 +312,10 @@
         </div>
     </div>
     <div class="content">
-        <h1 data-i18n="result.title">Plant Disease Prediction Result</h1>
+        <h1 data-i18n="result.title">
+            <i class="fas fa-clipboard-check"></i>
+            Plant Disease Prediction Result
+        </h1>
         <div class="prediction-result">
             {% if predicted_disease %}
             <h2>

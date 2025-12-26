@@ -4,52 +4,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Classification Model - Login</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=600') no-repeat center center fixed;
-            background-size: cover;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d8659;
+            --primary-green-dark: #1f5d3f;
+            --primary-green-light: #3da372;
+            --secondary-green: #4caf50;
+            --text-dark: #2c3e50;
+            --text-light: #5a6c7d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        .login-container {
-            background: rgba(255, 255, 255, 0.8);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(45, 134, 89, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 1;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
             text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
+
+        .login-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+        }
+
+        .login-container h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-green-dark);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .login-container h1 i {
+            color: var(--primary-green);
+            font-size: 32px;
+        }
+
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .login-container input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: var(--transition);
+            outline: none;
+            background: var(--bg-light);
+            color: var(--text-dark);
         }
+
+        .login-container input:focus {
+            border-color: var(--primary-green);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(45, 134, 89, 0.1);
+        }
+
+        .login-container input::placeholder {
+            color: var(--text-light);
+        }
+
         .login-container button {
-            padding: 10px 20px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
             color: white;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
         }
+
+        .login-container button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .login-container button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .login-container button span {
+            position: relative;
+            z-index: 1;
+        }
+
         .login-container button:hover {
-            background-color: #45a049;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(45, 134, 89, 0.6);
+            background: linear-gradient(135deg, var(--primary-green-light), var(--primary-green));
+        }
+
+        .login-container button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        .input-wrapper input {
+            padding-left: 50px;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 30px;
+            }
+
+            .login-container h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>Plant Disease Classification Model - Login</h1>
+        <h1>
+            <i class="fas fa-seedling"></i>
+            Plant Disease Classification Model
+        </h1>
         <form action="/login" method="post">
-            <input type="email" name="email" placeholder="Email" required><br>
-            <input type="password" name="password" placeholder="Password" required><br>
-            <button type="submit">Login</button>
+            <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit">
+                <span>Login</span>
+            </button>
         </form>
     </div>
 </body>

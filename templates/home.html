@@ -4,82 +4,474 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Classification Model - Home</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=600') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
+
+        :root {
+            --primary-green: #2d8659;
+            --primary-green-dark: #1f5d3f;
+            --primary-green-light: #3da372;
+            --secondary-green: #4caf50;
+            --accent-orange: #ff9800;
+            --accent-yellow: #ffc107;
+            --text-dark: #2c3e50;
+            --text-light: #5a6c7d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(45, 134, 89, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Navbar */
         .navbar {
-            overflow: hidden;
-            background-color: #333;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
         }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
         .navbar a {
             float: left;
             display: block;
-            color: white;
+            color: var(--text-dark);
             text-align: center;
-            padding: 14px 20px;
+            padding: 20px 28px;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+            position: relative;
         }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transition: var(--transition);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
         .navbar a:hover {
-            background-color: #ddd;
-            color: black;
+            color: var(--primary-green);
+            background: var(--bg-light);
         }
-        .navbar .right {
-            float: right;
+
+        .navbar a:hover::after {
+            width: 60%;
         }
+
+        /* Content */
         .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            margin: 20px;
-            border-radius: 10px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
             text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
         }
-        .content ol {
-            list-style-type: none;
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--primary-green-dark);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .hero h1 i {
+            color: var(--primary-green);
+            font-size: 48px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green-light);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card i {
+            font-size: 48px;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-green-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Info Sections */
+        .info-section {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .info-section h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-green-dark);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-section h2 i {
+            color: var(--primary-green);
+            font-size: 36px;
+        }
+
+        .info-section ol,
+        .info-section ul {
+            list-style: none;
             padding-left: 0;
         }
-        .content ul {
-            list-style-type: none;
-            padding-left: 0;
+
+        .info-section ol li,
+        .info-section ul li {
+            padding: 16px 0 16px 48px;
+            position: relative;
+            color: var(--text-dark);
+            font-size: 16px;
+            line-height: 1.8;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .info-section ol li:last-child,
+        .info-section ul li:last-child {
+            border-bottom: none;
+        }
+
+        .info-section ol li::before {
+            content: counter(list-item);
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .info-section ul li::before {
+            content: "🌿";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            font-size: 24px;
+        }
+
+        .info-section ol {
+            counter-reset: list-item;
+        }
+
+        .info-section ol li {
+            counter-increment: list-item;
+        }
+
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
+            transition: var(--transition);
+            margin-top: 32px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(45, 134, 89, 0.6);
+            background: linear-gradient(135deg, var(--primary-green-light), var(--primary-green));
+        }
+
+        .cta-button i {
+            font-size: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                padding: 16px;
+            }
+
+            .hero {
+                padding: 40px 24px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                flex-direction: column;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-section {
+                padding: 24px;
+            }
+
+            .info-section h2 {
+                font-size: 24px;
+            }
+
+            .navbar a {
+                padding: 16px 20px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <a href="http://localhost/sathwik/smart_cultivation_system/farmer_dashboard.php">Home</a>
-        <a href="{{ url_for('disease_recognition') }}">Disease Recognition</a>
+        <a href="http://localhost/smart_cultivation_system/farmer_dashboard.php">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{{ url_for('disease_recognition') }}">
+            <i class="fas fa-search"></i> Disease Recognition
+        </a>
     </div>
+    
     <div class="content">
-        <h1>Welcome to the Plant Disease Recognition System! 🌿🔍</h1>
-        <p>Our mission is to help in identifying plant diseases efficiently. Upload an image of a plant, and our system will analyze it to detect any signs of diseases. Together, let's protect our crops and ensure a healthier harvest!</p>
-        <h2>How It Works</h2>
-        <div>
-            <p>Upload Image: Go to the Disease Recognition page and upload an image of a plant with suspected diseases.</p>
-            <p>Analysis: Our system will process the image using advanced algorithms to identify potential diseases.</p>
-            <p>Results: View the results and recommendations for further action.</p>
+        <div class="hero">
+            <h1>
+                <i class="fas fa-seedling"></i>
+                Welcome to the Plant Disease Recognition System!
+            </h1>
+            <p>
+                Our mission is to help in identifying plant diseases efficiently. Upload an image of a plant, 
+                and our system will analyze it to detect any signs of diseases. Together, let's protect our crops 
+                and ensure a healthier harvest!
+            </p>
+            <a href="{{ url_for('disease_recognition') }}" class="cta-button">
+                <i class="fas fa-upload"></i>
+                Get Started
+            </a>
         </div>
-        <h2>Our Features</h2>
-        <ol>
-            <li>High Accuracy: Our model is trained on a large dataset to ensure high accuracy in disease detection.</li>
-            <li>Easy to Use: Upload an image and get results in seconds.</li>
-            <li>Secure: Your data is safe with us. We prioritize your privacy.</li>
-        </ol>
-        <h2>Supported Plants</h2>
-        <ul>
-            <li>Bell Pepper</li>
-            <li>Cassava</li>
-            <li>Corn</li>
-            <li>Grape</li>
-            <li>Mango</li>
-            <li>Potato</li>
-            <li>Rice</li>
-            <li>Rose</li>
-            <li>Tomato</li>
-        </ul>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-bullseye"></i>
+                <h2>High Accuracy</h2>
+                <p>Our model is trained on a large dataset to ensure high accuracy in disease detection.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-user-friendly"></i>
+                <h2>Easy to Use</h2>
+                <p>Upload an image and get results in seconds. Simple, fast, and intuitive interface.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Secure</h2>
+                <p>Your data is safe with us. We prioritize your privacy and data security.</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>
+                <i class="fas fa-cogs"></i>
+                How It Works
+            </h2>
+            <ol>
+                <li>
+                    <strong>Upload Image:</strong> Go to the Disease Recognition page and upload an image of a plant with suspected diseases.
+                </li>
+                <li>
+                    <strong>Analysis:</strong> Our system will process the image using advanced algorithms to identify potential diseases.
+                </li>
+                <li>
+                    <strong>Results:</strong> View the results and recommendations for further action.
+                </li>
+            </ol>
+        </div>
+
+        <div class="info-section">
+            <h2>
+                <i class="fas fa-leaf"></i>
+                Supported Plants
+            </h2>
+            <ul>
+                <li>Bell Pepper</li>
+                <li>Cassava</li>
+                <li>Corn</li>
+                <li>Grape</li>
+                <li>Mango</li>
+                <li>Potato</li>
+                <li>Rice</li>
+                <li>Rose</li>
+                <li>Tomato</li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>

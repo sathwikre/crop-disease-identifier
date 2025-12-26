@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Disease Recognition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,31 +13,46 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-green: #2d8659;
+            --primary-green-dark: #1f5d3f;
+            --primary-green-light: #3da372;
+            --secondary-green: #4caf50;
+            --text-dark: #2c3e50;
+            --text-light: #5a6c7d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
         }
 
         body::before {
-            content: '';
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1920') no-repeat center center fixed;
-            background-size: cover;
-            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(45, 134, 89, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
             z-index: 0;
+            pointer-events: none;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background: white;
+            box-shadow: var(--shadow-sm);
             padding: 0;
             position: sticky;
             top: 0;
@@ -64,13 +80,13 @@
         .navbar a {
             float: left;
             display: block;
-            color: #2d3748;
+            color: var(--text-dark);
             text-align: center;
             padding: 20px 28px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 15px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             position: relative;
         }
 
@@ -81,14 +97,15 @@
             left: 50%;
             width: 0;
             height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: all 0.3s ease;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transition: var(--transition);
             transform: translateX(-50%);
             border-radius: 2px;
         }
 
         .navbar a:hover {
-            color: #667eea;
+            color: var(--primary-green);
+            background: var(--bg-light);
         }
 
         .navbar a:hover::after {
@@ -122,8 +139,8 @@
         }
 
         .language-selector select:hover {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary-green);
+            box-shadow: 0 2px 8px rgba(45, 134, 89, 0.2);
             transform: translateY(-2px);
         }
 
@@ -149,12 +166,20 @@
 
         .content h1 {
             text-align: center;
-            color: white;
+            color: var(--primary-green-dark);
             font-size: 3rem;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 15px;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
             letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .content h1 i {
+            color: var(--primary-green);
+            font-size: 48px;
         }
 
         .content h1::after {
@@ -162,113 +187,32 @@
             display: block;
             width: 80px;
             height: 4px;
-            background: white;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
             margin: 15px auto 40px;
             border-radius: 2px;
-            animation: expandWidth 0.8s ease-out 0.5s both;
-        }
-
-        @keyframes expandWidth {
-            from {
-                width: 0;
-            }
-            to {
-                width: 80px;
-            }
         }
 
         .upload-container {
-            background: rgba(255, 255, 255, 0.98);
+            background: white;
             border-radius: 24px;
             padding: 45px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            animation: scaleIn 0.6s ease-out 0.3s both;
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .upload-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            10%, 30%, 50%, 70%, 90% {
-                transform: translateX(-5px);
-            }
-            20%, 40%, 60%, 80% {
-                transform: translateX(5px);
-            }
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 30px rgba(102, 126, 234, 0.6);
-            }
-        }
 
         .mode-toggle {
             display: flex;
@@ -284,22 +228,17 @@
         .mode-toggle button {
             flex: 1;
             padding: 16px 28px;
-            border: 2px solid #cbd5e0;
+            border: 2px solid var(--primary-green-light);
             border-radius: 12px;
-            background: #ffffff;
-            color: #000000;
+            background: linear-gradient(135deg, rgba(45, 134, 89, 0.15), rgba(76, 175, 80, 0.15));
+            color: var(--primary-green-dark);
             cursor: pointer;
             font-size: 16px;
             font-weight: 700;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 170px;
             position: relative;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            animation: slideInLeft 0.5s ease-out;
-        }
-
-        .mode-toggle button:nth-child(2) {
-            animation: slideInRight 0.5s ease-out 0.1s both;
+            box-shadow: 0 2px 6px rgba(45, 134, 89, 0.2);
         }
 
         .mode-toggle button::before {
@@ -309,7 +248,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
             border-radius: 10px;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -318,33 +257,31 @@
         .mode-toggle button span {
             position: relative;
             z-index: 1;
-            color: #000000;
+            color: var(--primary-green-dark);
         }
 
         .mode-toggle button:hover {
-            color: #000000;
-            background: #f7fafc;
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            color: white;
+            background: linear-gradient(135deg, var(--primary-green-light), var(--primary-green));
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(45, 134, 89, 0.4);
             transform: translateY(-2px) scale(1.02);
-            animation: pulse 1s ease-in-out infinite;
         }
 
         .mode-toggle button:hover span {
-            color: #000000;
+            color: white;
         }
 
         .mode-toggle button.active {
-            color: #000000;
-            border-color: #667eea;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            color: white;
+            border-color: var(--primary-green);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.5);
             font-weight: 700;
-            background: #e6f0ff;
-            animation: glow 2s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
         }
 
         .mode-toggle button.active span {
-            color: #000000;
+            color: white;
         }
 
         .mode-toggle button.active::before {
@@ -365,7 +302,6 @@
             font-size: 1.75rem;
             font-weight: 600;
             text-shadow: none;
-            animation: fadeInUp 0.6s ease 0.2s both;
         }
 
         .file-upload-container form {
@@ -392,47 +328,42 @@
             outline: none;
             color: #2d3748;
             font-weight: 500;
-            animation: fadeIn 0.6s ease 0.4s both;
         }
 
         .upload-container input[type="file"]:hover {
-            border-color: #667eea;
+            border-color: var(--primary-green);
             background: #f7fafc;
             transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
-            animation: bounce 0.6s ease;
+            box-shadow: 0 8px 20px rgba(45, 134, 89, 0.2);
         }
 
         .upload-container input[type="file"]:focus {
-            animation: glow 1.5s ease-in-out infinite;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(45, 134, 89, 0.1);
         }
 
         .upload-container input[type="file"]::file-selector-button {
             padding: 12px 24px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
             color: white;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             margin-right: 15px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(45, 134, 89, 0.3);
         }
 
         .upload-container input[type="file"]::file-selector-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 18px rgba(45, 134, 89, 0.5);
+            background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--primary-green) 100%);
         }
 
         #filePreview {
             width: 100%;
             max-width: 550px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         #filePreview img {
@@ -462,13 +393,12 @@
             color: white;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 200px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.3);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.6s ease 0.6s both;
         }
 
         .upload-container button::before, .camera-controls button::before {
@@ -496,13 +426,11 @@
 
         .upload-container button:hover, .camera-controls button:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            animation: pulse 0.6s ease-in-out;
+            box-shadow: 0 10px 30px rgba(45, 134, 89, 0.5);
         }
 
         .upload-container button:active, .camera-controls button:active {
             transform: translateY(-1px) scale(0.98);
-            animation: bounce 0.3s ease;
         }
 
         .upload-container button:disabled {
@@ -510,15 +438,16 @@
             cursor: not-allowed;
             transform: none !important;
             opacity: 0.7;
-            animation: pulse 1.5s ease-in-out infinite;
         }
 
         #predictBtn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
         }
 
         #predictBtn:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green-light) 100%);
+            box-shadow: 0 8px 25px rgba(45, 134, 89, 0.6);
         }
 
         .camera-container {
@@ -527,16 +456,10 @@
 
         .camera-container.active {
             display: block;
-            animation: slideInRight 0.5s ease;
-        }
-
-        .file-upload-container {
-            animation: slideInLeft 0.5s ease;
         }
 
         .file-upload-container.hidden {
             display: none;
-            animation: slideInLeft 0.3s ease reverse;
         }
 
 
@@ -549,13 +472,11 @@
             border: 3px solid #e2e8f0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            animation: fadeIn 0.6s ease 0.3s both;
         }
 
         #videoElement:hover {
             transform: scale(1.02);
             box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            animation: glow 2s ease-in-out infinite;
         }
 
         #previewImage {
@@ -578,7 +499,6 @@
 
         #previewImage.show {
             display: block;
-            animation: scaleIn 0.5s ease, bounce 0.6s ease 0.3s;
         }
 
         .camera-controls {
@@ -590,27 +510,49 @@
         }
 
         #startCameraBtn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
+        }
+
+        #startCameraBtn:hover {
+            box-shadow: 0 8px 25px rgba(45, 134, 89, 0.6);
         }
 
         #captureBtn {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--primary-green) 100%);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
         }
 
         #captureBtn:disabled {
             background: #cbd5e0 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         #retakeBtn {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        #retakeBtn:hover {
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.6);
         }
 
         #uploadPhotoBtn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+            box-shadow: 0 6px 20px rgba(45, 134, 89, 0.4);
+        }
+
+        #uploadPhotoBtn:hover {
+            box-shadow: 0 8px 25px rgba(45, 134, 89, 0.6);
         }
 
         #stopCameraBtn {
             background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+        }
+
+        #stopCameraBtn:hover {
+            box-shadow: 0 8px 25px rgba(245, 101, 101, 0.6);
         }
 
         /* Loading spinner animation */
@@ -666,8 +608,12 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="http://localhost/sathwik/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home"><span>Home</span></a>
-        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition"><span>Disease Recognition</span></a>
+        <a href="http://localhost/smart_cultivation_system/farmer_dashboard.php" data-i18n="nav.home">
+            <i class="fas fa-home"></i> <span>Home</span>
+        </a>
+        <a href="{{ url_for('disease_recognition') }}" data-i18n="nav.disease_recognition">
+            <i class="fas fa-search"></i> <span>Disease Recognition</span>
+        </a>
         <div class="language-selector">
             <label for="langSelect">🌐</label>
             <select id="langSelect" onchange="changeLanguage(this.value)">
@@ -677,7 +623,10 @@
         </div>
     </div>
     <div class="content">
-        <h1 data-i18n="title">Plant Disease Recognition</h1>
+        <h1 data-i18n="title">
+            <i class="fas fa-search"></i>
+            Plant Disease Recognition
+        </h1>
         <div class="upload-container">
             <div class="mode-toggle">
                 <button id="uploadModeBtn" class="active" onclick="switchMode('upload')" data-i18n="btn.upload_image"><span>Upload Image</span></button>
