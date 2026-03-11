@@ -156,7 +156,21 @@ def get_precaution(label: str, lang: str = 'en') -> str:
     return precaution_map.get(label, default_msg)
 
 # Function to predict the class of the plant disease
-
+def model_prediction(test_image_path):
+    # Ensure image is RGB (drop alpha channel if present) and resized
+    try:
+        image = Image.open(test_image_path).convert('RGB')
+        image = image.resize((img_width, img_height))
+        input_arr = tf.keras.preprocessing.image.img_to_array(image)
+        input_arr = np.expand_dims(input_arr, axis=0)
+        input_arr = input_arr / 255.0
+        predictions = model.predict(input_arr, verbose=0)
+        result_index = int(np.argmax(predictions))
+        print(f"Model prediction shape: {predictions.shape}, max index: {result_index}, max value: {np.max(predictions)}")
+        return result_index
+    except Exception as e:
+        print(f"Error in model_prediction: {str(e)}")
+        raise
 @app.route('/')
 def index():
     # Serve the home page as the default root (login disabled)
