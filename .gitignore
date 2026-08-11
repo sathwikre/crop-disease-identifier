@@ -9,6 +9,8 @@ venv/
 
 # Large local model, datasets, and training/presentation files
 Team3model.h5
+Team3model.tflite
+Team3model_float16.tflite
 Dataset & Model File/
 # This project currently has a file (not a directory) with this name.
 Dataset & Model File

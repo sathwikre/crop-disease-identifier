@@ -80,9 +80,8 @@ A deep learning-based solution for early plant disease detection to support prec
 ---
 ## Render deployment
 
-The trained model is intentionally excluded from Git. Upload `Team3model.h5` to a
-Hugging Face model repository, then update `MODEL_REPO` in
-`download_model.py` with `YOUR_HUGGINGFACE_USERNAME/YOUR_MODEL_REPOSITORY`.
+The trained model is intentionally excluded from Git. The Render build downloads
+`Team3model_float16.tflite` from the configured Hugging Face repository.
 
 Configure the Render web service with:
 

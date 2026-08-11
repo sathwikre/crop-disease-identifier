@@ -1,7 +1,7 @@
 Flask
-tensorflow==2.20.0
 numpy
 Pillow
 werkzeug
 gunicorn
 huggingface_hub
+ai-edge-litert==2.1.6

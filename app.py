@@ -1,8 +1,7 @@
 import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 import numpy as np
-import tensorflow as tf
+from ai_edge_litert.interpreter import Interpreter
 from flask import Flask, request, render_template, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -17,12 +16,12 @@ app.config['SECRET_KEY'] = os.environ.get(
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
-# Load the model
-model_path = os.path.join(os.path.dirname(__file__), 'Team3model.h5')
-model = tf.keras.models.load_model(model_path, compile=False)
-
-# Manually configure the model's loss function
-model.compile(optimizer='adam', loss=tf.keras.losses.CategoricalCrossentropy(reduction='sum_over_batch_size'))
+# Load the TensorFlow Lite model.
+model_path = os.path.join(os.path.dirname(__file__), 'Team3model_float16.tflite')
+interpreter = Interpreter(model_path=model_path)
+interpreter.allocate_tensors()
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
 img_width, img_height = 256, 256
 
@@ -164,10 +163,12 @@ def model_prediction(test_image_path):
     try:
         image = Image.open(test_image_path).convert('RGB')
         image = image.resize((img_width, img_height))
-        input_arr = tf.keras.preprocessing.image.img_to_array(image)
+        input_arr = np.asarray(image, dtype=np.float32)
         input_arr = np.expand_dims(input_arr, axis=0)
         input_arr = input_arr / 255.0
-        predictions = model.predict(input_arr, verbose=0)
+        interpreter.set_tensor(input_details[0]['index'], input_arr)
+        interpreter.invoke()
+        predictions = interpreter.get_tensor(output_details[0]['index'])
         result_index = int(np.argmax(predictions))
         print(f"Model prediction shape: {predictions.shape}, max index: {result_index}, max value: {np.max(predictions)}")
         return result_index
