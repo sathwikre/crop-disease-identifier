@@ -1,13 +1,11 @@
-"""Download the trained model during the Render build."""
+"""Download the trained INT8 TFLite model during the Render build."""
 
 import shutil
-
 from huggingface_hub import hf_hub_download
 
-# Hugging Face repository that stores the TFLite model used by the Render build.
 MODEL_REPO = "sath123-reddy/crop-disease-model"
 
-mmodel_path = hf_hub_download(
+model_path = hf_hub_download(
     repo_id=MODEL_REPO,
     filename="Team3model_int8.tflite",
 )
