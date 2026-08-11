@@ -10,7 +10,10 @@ from PIL import Image
 # Initialize the Flask app
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads/'
-app.config['SECRET_KEY'] = 'supersecretkey'
+app.config['SECRET_KEY'] = os.environ.get(
+    'SECRET_KEY',
+    'dev-secret-key'
+)
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 

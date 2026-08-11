@@ -1,5 +1,7 @@
-flask
-tensorflow
+Flask
+tensorflow==2.20.0
 numpy
-pillow
+Pillow
 werkzeug
+gunicorn
+huggingface_hub

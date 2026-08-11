@@ -78,3 +78,16 @@ A deep learning-based solution for early plant disease detection to support prec
 📍 *Feel free to fork, star, or contribute!*
 
 ---
+## Render deployment
+
+The trained model is intentionally excluded from Git. Upload `Team3model.h5` to a
+Hugging Face model repository, then update `MODEL_REPO` in
+`download_model.py` with `YOUR_HUGGINGFACE_USERNAME/YOUR_MODEL_REPOSITORY`.
+
+Configure the Render web service with:
+
+- Build Command: `pip install -r requirements.txt && python download_model.py`
+- Start Command: `gunicorn app:app`
+
+Render uses Python 3.11.9, selected in `.python-version`. The build downloads
+the model into the project root before Gunicorn imports the Flask application.

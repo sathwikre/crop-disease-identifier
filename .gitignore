@@ -1,13 +1,22 @@
-# Ignore the trained model file (kept out of VCS due to size/privacy)
-Team3model.h5
-
-# Byte-compiled / optimized / DLL files
+# Python bytecode
 __pycache__/
+*.pyc
 *.py[cod]
 
-# Virtual environment
+# Virtual environments
 .venv/
 venv/
 
-# Flask uploads
+# Large local model, datasets, and training/presentation files
+Team3model.h5
+Dataset & Model File/
+# This project currently has a file (not a directory) with this name.
+Dataset & Model File
+*.ipynb
+*.pptx
+
+# Local configuration
+.env
+
+# User-uploaded images
 static/uploads/
